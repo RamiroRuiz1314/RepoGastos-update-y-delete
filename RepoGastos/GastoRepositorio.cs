@@ -16,26 +16,26 @@ namespace RepoGastos
 
         public void Insertar(Gasto g)
         {
-            string sql = "INSERT INTO Gastos (Descripcion, Monto, Categoria) " +
-                         "VALUES (@descripcion, @monto, @categoria)";
+            string sql = "INSERT INTO Gastos (Nombre, Monto, Membresia) " +
+                         "VALUES (@nombre, @monto, @membresia)";
 
             using (SqlConnection conexion = new SqlConnection(CadenaConexion))
             using (SqlCommand comando = new SqlCommand(sql, conexion))
             {
-                comando.Parameters.AddWithValue("@descripcion", g.Descripcion);
+                comando.Parameters.AddWithValue("@nombre", g.Nombre);
                 comando.Parameters.AddWithValue("@monto", g.Monto);
-                comando.Parameters.AddWithValue("@categoria", g.Categoria);
+                comando.Parameters.AddWithValue("@membresia", g.Membresia);
 
                 conexion.Open();
                 int filas = comando.ExecuteNonQuery();
-                Console.WriteLine(filas == 1 ? "Gasto registrado." : "No se registró.");
+                Console.WriteLine(filas == 1 ? "Socio registrado." : "No se pudo registrar al Socio.");
             }
         }
 
         public List<Gasto> ListarTodos()
         {
             List<Gasto> lista = new List<Gasto>();
-            string sql = "SELECT Id, Descripcion, Monto, Categoria " +
+            string sql = "SELECT Id, Nombre, Monto, Membresia " +
                          "FROM Gastos ORDER BY Id";
 
             using (SqlConnection conexion = new SqlConnection(CadenaConexion))
@@ -49,9 +49,9 @@ namespace RepoGastos
                         lista.Add(new Gasto
                         {
                             Id = lector.GetInt32(0),
-                            Descripcion = lector.GetString(1),
+                            Nombre = lector.GetString(1),
                             Monto = lector.GetDecimal(2),
-                            Categoria = lector.GetString(3)
+                            Membresia = lector.GetString(3)
                         });
                     }
                 }
@@ -62,7 +62,7 @@ namespace RepoGastos
 
         public Gasto? BuscarPorId(int id)
         {
-            string sql = "SELECT Id, Descripcion, Monto, Categoria " +
+            string sql = "SELECT Id, Nombre, Monto, Membresia " +
                          "FROM Gastos WHERE Id = @id";
 
             using (SqlConnection conexion = new SqlConnection(CadenaConexion))
@@ -78,9 +78,9 @@ namespace RepoGastos
                         return new Gasto
                         {
                             Id = lector.GetInt32(0),
-                            Descripcion = lector.GetString(1),
+                            Nombre = lector.GetString(1),
                             Monto = lector.GetDecimal(2),
-                            Categoria = lector.GetString(3)
+                            Membresia = lector.GetString(3)
                         };
                     }
                 }
@@ -91,15 +91,15 @@ namespace RepoGastos
         public bool Actualizar(Gasto g)
         {
             string sql = "UPDATE Gastos " +
-                         "SET Descripcion = @descripcion, Monto = @monto, Categoria = @categoria " +
+                         "SET Nombre = @Nombre, Monto = @monto, Membresia = @membresia " +
                          "WHERE Id = @id";
 
             using (SqlConnection conexion = new SqlConnection(CadenaConexion))
             using (SqlCommand comando = new SqlCommand(sql, conexion))
             {
-                comando.Parameters.AddWithValue("@descripcion", g.Descripcion);
+                comando.Parameters.AddWithValue("@nombre", g.Nombre);
                 comando.Parameters.AddWithValue("@monto", g.Monto);
-                comando.Parameters.AddWithValue("@categoria", g.Categoria);
+                comando.Parameters.AddWithValue("@membresia", g.Membresia);
                 comando.Parameters.AddWithValue("@id", g.Id);
 
                 conexion.Open();

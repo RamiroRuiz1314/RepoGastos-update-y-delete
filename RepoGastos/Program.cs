@@ -16,19 +16,19 @@ namespace RepoGastos
                 switch (opcion)
                 {
                     case "1":
-                        RegistrarGasto(repo);
+                        RegistrarSocio(repo);
                         break;
                     case "2":
-                        ListarGastos(repo);
+                        ListarSocios(repo);
                         break;
                     case "3":
-                        BuscarPorIdGasto(repo);
+                        BuscarPorIdSocio(repo);
                         break;
                     case "4":
-                        ActualizarMontoGasto(repo);
+                        ActualizarMontoSocio(repo);
                         break;
                     case "5":
-                        EliminarGasto(repo);
+                        EliminarSocio(repo);
                         break;
                     case "6":
                         Console.WriteLine("Saliendo del programa...");
@@ -44,27 +44,27 @@ namespace RepoGastos
         private static string MostrarMenu()
         {
             Console.WriteLine();
-            Console.WriteLine("||| REPOSITORIO DE GASTOS |||");
-            Console.WriteLine("Opcion #1.Registrar gasto");
-            Console.WriteLine("Opcion #2.Listar gastos");
-            Console.WriteLine("Opcion #3.Buscar gasto por Id");
-            Console.WriteLine("Opcion #4.Actualizar monto");
-            Console.WriteLine("Opcion #5.Eliminar gasto");
+            Console.WriteLine("||| SISTEMA DE REGISTRO DE SOCIOS GIMNASIO |||");
+            Console.WriteLine("Opcion #1.Registrar Socio");
+            Console.WriteLine("Opcion #2.Listar Socios");
+            Console.WriteLine("Opcion #3.Buscar socio por Id");
+            Console.WriteLine("Opcion #4.Actualizar Socio");
+            Console.WriteLine("Opcion #5.Eliminar socio");
             Console.WriteLine("Opcion #6.Salir");
             Console.Write("Elige una opción: ");
             return Console.ReadLine();
         }
 
-        private static void RegistrarGasto(GastoRepositorio repo)
+        private static void RegistrarSocio(GastoRepositorio repo)
         {
-            Console.Write("Descripción: ");
-            string descripcion = Console.ReadLine().Trim();
+            Console.Write("Nombre: ");
+            string nombre = Console.ReadLine().Trim();
             Console.Write("Monto: ");
             bool montoOk = decimal.TryParse(Console.ReadLine(), out decimal monto);
-            Console.Write("Categoría: ");
-            string categoria = Console.ReadLine().Trim();
+            Console.Write("Membresia: ");
+            string membresia = Console.ReadLine().Trim();
 
-            if (string.IsNullOrWhiteSpace(descripcion) || !montoOk || monto <= 0 || string.IsNullOrWhiteSpace(categoria))
+            if (string.IsNullOrWhiteSpace(nombre) || !montoOk || monto <= 0 || string.IsNullOrWhiteSpace(membresia))
             {
                 Console.WriteLine("Datos inválidos.");
                 return;
@@ -74,9 +74,9 @@ namespace RepoGastos
             {
                 repo.Insertar(new Gasto
                 {
-                    Descripcion = descripcion,
+                    Nombre = nombre,
                     Monto = monto,
-                    Categoria = categoria
+                    Membresia = membresia
                 });
             }
             catch (SqlException ex)
@@ -85,7 +85,7 @@ namespace RepoGastos
             }
         }
 
-        private static void ListarGastos(GastoRepositorio repo)
+        private static void ListarSocios(GastoRepositorio repo)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace RepoGastos
 
                 if (lista.Count == 0)
                 {
-                    Console.WriteLine("No hay gastos registrados.");
+                    Console.WriteLine("No hay Socios registrados.");
                     return;
                 }
 
@@ -104,7 +104,7 @@ namespace RepoGastos
                     total += g.Monto;
                 }
 
-                Console.WriteLine($"TOTAL GASTADO: Q {total:N2}");
+                Console.WriteLine($"TOTAL SOCIO: Q {total:N2}");
             }
             catch (SqlException ex)
             {
@@ -112,9 +112,9 @@ namespace RepoGastos
             }
         }
 
-        private static void BuscarPorIdGasto(GastoRepositorio repo)
+        private static void BuscarPorIdSocio(GastoRepositorio repo)
         {
-            Console.Write("Id del gasto a buscar: ");
+            Console.Write("Id del Socio a buscar: ");
             if (!int.TryParse(Console.ReadLine(), out int id))
             {
                 Console.WriteLine("Id inválido.");
@@ -132,9 +132,9 @@ namespace RepoGastos
             }
         }
 
-        private static void ActualizarMontoGasto(GastoRepositorio repo)
+        private static void ActualizarMontoSocio(GastoRepositorio repo)
         {
-            Console.Write("Id del gasto a actualizar: ");
+            Console.Write("Id del Socio a actualizar: ");
             if (!int.TryParse(Console.ReadLine(), out int id))
             {
                 Console.WriteLine("Id inválido.");
@@ -150,26 +150,26 @@ namespace RepoGastos
                     return;
                 }
 
-                Console.WriteLine($"Gasto actual: {gasto}");
-                Console.Write("Nuevo monto: ");
+                Console.WriteLine($"Socio Membresia: {gasto}");
+                Console.Write("Nueva Membresia: ");
                 if (!decimal.TryParse(Console.ReadLine(), out decimal monto) || monto <= 0)
                 {
-                    Console.WriteLine("Monto inválido.");
+                    Console.WriteLine("Membresia inválida.");
                     return;
                 }
 
                 gasto.Monto = monto;
-                Console.WriteLine(repo.Actualizar(gasto) ? "Gasto actualizado." : "No se actualizó.");
+                Console.WriteLine(repo.Actualizar(gasto) ? "Membresia actualizada." : "No se actualizó la membresia.");
             }
             catch (SqlException ex)
             {
-                Console.WriteLine($"Error al actualizar: {ex.Message}");
+                Console.WriteLine($"Error al actualizar la membresia: {ex.Message}");
             }
         }
 
-        private static void EliminarGasto(GastoRepositorio repo)
+        private static void EliminarSocio(GastoRepositorio repo)
         {
-            Console.Write("Id del gasto a eliminar: ");
+            Console.Write("Id del Socio a eliminar: ");
             if (!int.TryParse(Console.ReadLine(), out int id))
             {
                 Console.WriteLine("Id inválido.");
@@ -179,7 +179,7 @@ namespace RepoGastos
             try
             {
                 bool ok = repo.Eliminar(id);
-                Console.WriteLine(ok ? "Gasto eliminado." : "No existe ese Id.");
+                Console.WriteLine(ok ? "Socio eliminado." : "No existe ese Id.");
             }
             catch (SqlException ex)
             {
